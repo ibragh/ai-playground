@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  api:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    volumes:
+      - ./app:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_ENDPOINT=http://model:8001
+    depends_on:
+      - model
+  model:
+    image: vllm/vllm-openai:latest
+    command: bash -c "python3 -m vllm.entrypoints.openai.api_server --model mistralai/Mixtral-8x7B-Instruct-v0.1 --port 8001 --host 0.0.0.0"
+    ports:
+      - "8001:8001"
+    volumes:
+      - model-cache:/root/.cache
+volumes:
+  model-cache:
