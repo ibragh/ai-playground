@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+langchain
+pydantic
+paddleocr
+pymupdf
+faiss-cpu
+
